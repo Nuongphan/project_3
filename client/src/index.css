@@ -1,0 +1,131 @@
+@tailwind base;
+
+* {
+  box-sizing: border-box;
+}
+
+.logo {
+  border-radius: 50%;
+  height: 80px;
+  width: 80px;
+  border: 3px solid #fff;
+  margin-left: 50px;
+  padding: 0;
+}
+.logo-img {
+  width: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.containerr {
+  display: flex;
+  flex-direction: column;
+  row-gap: 15px;
+  margin: 10px 0 0 10px;
+}
+.admin-layout {
+  display: flex;
+
+  position: relative;
+}
+.dasboard {
+  background-color: #001c40;
+  color: #fff;
+  padding-bottom: 40px !important;
+  overflow-y: auto !important;
+}
+.text-base {
+  font-size: 16px !important;
+  line-height: 1.5rem;
+}
+.custom-hover:hover {
+  background-color: #c6defd;
+  color: #000;
+}
+.active {
+  background-color: #ffd43b;
+  color: #000;
+}
+.report-item {
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  background-color: #ffffff;
+  margin: 7px;
+  box-shadow: 0px 2px #e2e2e2;
+}
+.outlet {
+  position: absolute;
+  left: 23%;
+  width: 77%;
+  padding-top: 15px;
+  background-color: #f8fafc;
+  padding-left: 17px;
+}
+.search {
+  background-color: transparent;
+  margin-right: 30px;
+}
+.tableUser {
+  margin-right: 30px;
+  margin-bottom: 30px;
+}
+.table-product {
+  margin-right: 30px;
+  margin-bottom: 10px;
+  width: 95%;
+}
+.img-product {
+  width: 60px;
+  height: 70px;
+}
+.fixed {
+  position: relative !important;
+}
+.add-product {
+  width: 70%;
+  margin: 0 auto;
+}
+.input-item {
+  display: flex;
+  flex-direction: column;
+  row-gap: 6px;
+  margin-bottom: 10px;
+}
+.input-item input {
+  height: 26px;
+  outlet: none;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+.input-item label {
+  font-weight: bolder;
+  font-size: 13px;
+}
+.input-item select {
+  height: 26px;
+  border: 1px solid #ccc;
+  outlet:none;
+  border-radius: 3px;
+  padding: 0 0 0 13px;
+  font-size: 13px;
+}
+.pagination {
+  justify-content: space-around;
+  margin-bottom: 30px;
+}
+.cart-icon {
+  position: relative;
+}
+.cart-badge {
+  position: absolute;
+  top: 24px;
+  right: 61px;
+  color: #000;
+  border-radius: 50%;
+  width: 7px;
+  height: 7px;
+  font-size: 1px;
+  background-color: #000;
+  margin: 0 0 2px 2px
+}

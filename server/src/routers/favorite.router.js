@@ -1,0 +1,9 @@
+const express=require("express")
+const favoritesRouter=express.Router();
+const favoritesController=require("../controllers/favorites.controller")
+const checkAuth=require("../middleware/checkAuth")
+favoritesRouter.get("/", favoritesController.getFavorites)
+favoritesRouter.post("/",checkAuth, favoritesController.addFavorite)
+favoritesRouter.get("/favoriteUser",checkAuth, favoritesController.getUserFavorites)
+favoritesRouter.delete("/:id",checkAuth, favoritesController.deleteFavorite)
+module.exports= favoritesRouter
