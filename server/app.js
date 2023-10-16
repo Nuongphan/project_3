@@ -14,7 +14,6 @@ const Images= require("./src/models/images/images.entity")
 const Reviews=require("./src/models/reviews/reviews.entity")
 const Favorite=require("./src/models/favorite/favorite.entity")
 const Cart=require("./src/models/cart/cart.entity")
-const OrderItem=require("./src/models/orderItem/orderItem.entity")
 const Order=require("./src/models/order/order.entity")
 const Payment=require("./src/models/payment/payment.entity")
 app.use(express.json());

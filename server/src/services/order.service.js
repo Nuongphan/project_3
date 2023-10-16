@@ -3,8 +3,6 @@ class OrderService {
     // tạo mới order
     async createOrder(data) {
         try {
-
-
             const { userId, addressId, paymentId } = data
             if (!userId || !addressId || !paymentId) {
                 return { msg: "invalid data", status: 404 }

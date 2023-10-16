@@ -38,15 +38,14 @@ class OrderRepo {
         return payment
     }
     async createOrder(data) {
-        const {  userId, addressId, paymentId } = data.data
-        const {totalAmount}=data
+        const { userId, addressId, paymentId } = data.data
+        const { totalAmount } = data
         const order = await Order.create({
-            totalAmount:totalAmount,
-            addressId:addressId,
-            paymentId:paymentId,
-            userId:userId,
+            totalAmount: totalAmount,
+            addressId: addressId,
+            paymentId: paymentId,
+            userId: userId,
         })
-        await Cart.destroy({where:{userId:userId}})
         return order
     }
     async updateOrderStatus(data) {
@@ -59,7 +58,7 @@ class OrderRepo {
         return order
     }
     async cancelOrder(orderId) {
-        const order = await Order.update({status: 5}, { where: { id: orderId } })
+        const order = await Order.update({ status: 5 }, { where: { id: orderId } })
         return order
     }
 }

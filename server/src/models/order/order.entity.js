@@ -12,10 +12,10 @@ const Order = sequelize.define("Order", {
         allowNull: false,
         unique: true
     },
-    // userId: {
-    //     type: DataTypes.INTEGER,
-    //     allowNull: false
-    // },
+    userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
     status: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -34,7 +34,8 @@ const Order = sequelize.define("Order", {
         type: DataTypes.DATE,
         allowNull: false,
         defaultValue: new Date()
-    }
+    },
+    
 }, {
     timestamps: true
 })
