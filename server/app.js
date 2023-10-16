@@ -15,6 +15,8 @@ const Reviews=require("./src/models/reviews/reviews.entity")
 const Favorite=require("./src/models/favorite/favorite.entity")
 const Cart=require("./src/models/cart/cart.entity")
 const OrderItem=require("./src/models/orderItem/orderItem.entity")
+const Order=require("./src/models/order/order.entity")
+const Payment=require("./src/models/payment/payment.entity")
 app.use(express.json());
 app.use(express.urlencoded());
 const cors = require("cors");
@@ -42,6 +44,9 @@ app.use(express.static(__dirname + '/src/public/uploads'));
 // });
 // Cart.sync().then(() => {
 //     console.log("Cart ok");
+// });
+// Order.sync().then(() => {
+//     console.log("Order ok");
 // });
 app.use(cookieParser());
 app.use(

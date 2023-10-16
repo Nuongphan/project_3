@@ -10,7 +10,7 @@ const Payment = sequelize.define("Payment", {
     paymentMethod: {
         type: DataTypes.TEXT,
         allowNull: false
-    }
+    }    
 }, {
     timestamps: true
 })

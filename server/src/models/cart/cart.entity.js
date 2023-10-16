@@ -3,6 +3,12 @@ const sequelize=require("../../config/dbConfig")
 const Products=require("../products/products.model")
 const Users=require("../users/users.model")
 const Carts=sequelize.define("Carts", {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull:false
+    },
     quantity: {
         type: DataTypes.INTEGER,
         allowNull: true,
