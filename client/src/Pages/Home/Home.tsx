@@ -1,10 +1,10 @@
 import ImageHoverZoom from "../../css"
 import styles from "../../User.module.css"
-
+import React from "react"
 const Home = () => {
   
   return (
-    <>
+    <>   
       <div style={{ marginBottom: "35px" }}>
         <img
           src={
