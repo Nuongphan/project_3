@@ -17,9 +17,16 @@ const Shop =  () => {
     "Gift Sets",
   ];
   const searchResult = useSelector((state: any) => state.search);
+  console.log("searchResult", searchResult);
   const [type, setType] = useState<string>("Shop All");
-  const [productList, setProductList] = useState<IProduct[]>([]);
-  const filteredProducts = searchResult?.filter((product: any) => {
+  const [productList, setProductList] = useState<any[]>([]);
+  useEffect( () => {
+    axios
+      .get("http://localhost:8000/products")
+      .then((response) => {console.log("55555555555", response.data.products);
+       setProductList(response.data.products)});
+  }, []);
+  const filteredProducts = productList?.filter((product: any) => {
     if (type === "Shop All") {
       return product;
     }
@@ -42,12 +49,7 @@ const Shop =  () => {
       return product.type === "Gift sets";
     }
   });
-  //  dispatch({ type: "ADD", payload: filteredProducts });
-     useEffect( () => {
-    axios
-      .get("http://localhost:8080/proucts")
-      .then((response) => setProductList(response.data));
-  }, []);
+    
   return (
     <div className={styles.conatinerShop}>
       <div>
@@ -60,7 +62,7 @@ const Shop =  () => {
       <div className={styles.mainShop}>
         <div style={{ width: "25%" }} className={styles.sidebarShop}>
           <ul>
-            {tab.map((item) => (
+            {tab?.map((item) => (
               <li
                 style={
                   type === item

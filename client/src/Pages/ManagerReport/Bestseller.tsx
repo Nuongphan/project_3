@@ -4,13 +4,16 @@ import axios from "axios";
 
 export const Bestseller = () => {
   const [productList, setProductList] = useState<any>();
-  useEffect(() => {
+  useEffect( () => {
     axios
-      .get("http://localhost:8080/proucts")
-      .then((response) => setProductList(response.data));
+      .get("http://localhost:8000/products")
+      .then((response) =>{console.log("8888888888", response);
+        setProductList(response.data)} )
+      .catch((error)=> {console.log(error);
+      }) 
   }, []);
   const bestsellerProduct = productList?.filter(
-    (product: any) => product.bestsellers > 30
+    (product: any) => product?.bestsellers > 30
   );
   return (
     <>

@@ -1,84 +1,73 @@
 import { useDispatch } from "react-redux";
 import { formattedDate } from "../ManagerReport/ManagerReport";
 import TinyMCEEditor from "./TinyMCEEditor";
-import { SetStateAction, useEffect, useState } from "react";
+import { ChangeEvent, SetStateAction, useEffect, useState } from "react";
 import { addProduct } from "../../redux/Action/ProductAction";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import BaseAxios from "../../api/axiosClient";
 
 export function AddProduct() {
+  // const [selectedFile, setSelectedFile] = useState<File | null>();
+  // console.log("selectedFile: " ,selectedFile);
+  const [images, setImages] = useState<any>([]);
   const navigate = useNavigate();
-  const [selected, setSelected] = useState("");
+  const [selected, setSelected] = useState(0);
   const [descriptions, setDescriptions] = useState("");
   const dispatch = useDispatch();
   const productEdit = useSelector((state: any) => state.products.editProduct);
-  const [imageInput1, setImageInput1] = useState("");
-  const [imageInput2, setImageInput2] = useState("");
-  const [imageInput3, setImageInput3] = useState("");
-  const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
   const [quantity, setQuantity] = useState(0);
-
   const type = useSelector((state: any) => state.products.type);
+  console.log("type", type);
+
   useEffect(() => {
     if (productEdit) {
-      setId(productEdit.id || "");
       setName(productEdit.name || "");
       setQuantity(productEdit.quantity || 0);
       setPrice(productEdit.price || 0);
-      setSelected(productEdit.type || "");
-      setImageInput1(productEdit.image[0] || "");
-      setImageInput2(productEdit.image[1] || "");
-      setImageInput3(productEdit.image[2] || "");
+      setSelected(productEdit.type || 0);
       setDescriptions(productEdit.description || "");
     }
     if (type === "Add") {
-      setId("");
       setName("");
       setQuantity(0);
       setDescriptions("");
       setPrice(0);
-      setImageInput1("");
-      setImageInput2("");
-      setImageInput3("");
+      setSelected(0)
     }
   }, [productEdit]);
-
   function handleDescriptionChange(content: SetStateAction<string>) {
     setDescriptions(content);
   }
+  const handleAvatarChange = (event: any) => {
+    let listImages: any = []
+    for (let i = 0; i < event.target.files.length; i++) {
+      listImages.push(event.target.files[i])
+    }
+    setImages(listImages)
+  };
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-
     if (productEdit) {
       const updateProductt = {
         ...productEdit,
         name: name,
         quantity: quantity,
         price: price,
-        type: selected,
+        categoryId: selected,
         description: descriptions,
-        image: [imageInput1, imageInput2, imageInput3],
-        feedback: [],
-        totalRating: 0,
-        status: true,
+        stock: true,
       };
       try {
-        await axios.patch(
-          `http://localhost:8080/proucts/${id}`,
-          updateProductt
-        );
-        setId("");
+        await BaseAxios.post(`/products/${productEdit.id}`, updateProductt)
         setName("");
         setQuantity(0);
         setDescriptions("");
         setPrice(0);
-        setImageInput1("");
-        setImageInput2("");
-        setImageInput3("");
         navigate(-1); // Quay lại trang trước đó
       } catch (error) {
         console.error("Lỗi khi cập nhật sản phẩm:", error);
@@ -86,37 +75,36 @@ export function AddProduct() {
     } else if (
       selected &&
       descriptions &&
-      imageInput1 &&
-      imageInput2 &&
-      imageInput3 &&
-      id &&
       name &&
       price &&
       descriptions !== ""
     ) {
       const newProduct = {
-        id: id,
         name: name,
-        quantity: quantity,
         price: price,
         description: descriptions,
-        type: selected,
-        image: [imageInput1, imageInput2, imageInput3],
-        feedback: [],
-        totalRating: 0,
-        status: true,
-        totalReview: 0,
-        bestsellers: 0
+        categoryId: selected,
+        stock: quantity,
       };
-      dispatch(addProduct(newProduct));   
-      setId("");
+      const createProduct = await BaseAxios.post(`/products`, newProduct)
+      console.log("createProduct", createProduct);
+      if (createProduct?.status == 200) {
+        const formData = new FormData();
+        // Lặp qua mảng hình ảnh và thêm từng hình ảnh vào FormData 
+        images.forEach((img: any) => {
+          formData.append(`images`, img); // Tên trường sẽ là `images[0]`, `images[1]`,...
+        });
+        formData.append("productId", createProduct?.data?.return.id); // imageFile là File hoặc Blob của hình ảnh
+        await BaseAxios.post("/images", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          }
+        })
+      }
       setName("");
       setQuantity(0);
       setDescriptions("");
       setPrice(0);
-      setImageInput1("");
-      setImageInput2("");
-      setImageInput3("");
     } else {
       alert("Please enter form");
     }
@@ -159,18 +147,18 @@ export function AddProduct() {
           Tạo mới sản phẩm
         </p>
 
-        <form style={{ padding: "0 15px 15px 15px" }}>
-          <div className="input-item">
+        <form encType="multipart/form-data" style={{ padding: "0 15px 15px 15px" }}>
+          {/* <div className="input-item">
             <label htmlFor="id">Mã sản phẩm</label>
             <input
               required
               value={id}
-              id="id"
+              id="id"    
               name="id"
               type="text"
               onChange={(e) => setId(e.target.value)}
             />
-          </div>{" "}
+          </div>{" "} */}
           <div className="input-item">
             <label htmlFor="name">Tên sản phẩm</label>
             <input
@@ -208,36 +196,25 @@ export function AddProduct() {
             <label htmlFor="type">Danh mục</label>
             <select
               value={selected}
-              onChange={(e) => setSelected(e.target.value)}
-              name="type"
+              onChange={(e) => setSelected(Number(e.target.value))}
+              name="images"
               id="type"
+
               required
             >
               <option value="">-- Loại --</option>
-              <option value="CANDLE">Candle</option>
-              <option value="ROOM PERFUME">Room perfume</option>
-              <option value="ROOM MIST">Room mist</option>
-              <option value="BATH BAR">Bath bar</option>
+              <option value="1">Candle</option>
+              <option value="2">Room mist</option>
+              <option value="3">Room perfume</option>
+              <option value="4">Bath bar</option>
             </select>
           </div>
           <div className="input-item">
             <label>Ảnh sản phẩm</label>
             <input
-              onChange={(e) => setImageInput1(e.target.value)}
-              value={imageInput1}
-              type="text"
-              required
-            />
-            <input
-              onChange={(e) => setImageInput2(e.target.value)}
-              value={imageInput2}
-              type="text"
-              required
-            />
-            <input
-              onChange={(e) => setImageInput3(e.target.value)}
-              value={imageInput3}
-              type="text"
+              type="file"
+              multiple
+              onChange={(handleAvatarChange)}
               required
             />
           </div>

@@ -6,7 +6,7 @@ import Search from "./Search";
 import { useSelector } from "react-redux";
 
 interface IProductProps {
-  productListt: IProduct[];
+  productListt: any[];
 }
 const ListProduct = (props: IProductProps) => {
   const searchResult = useSelector((state: any) => state.search);
@@ -18,22 +18,22 @@ const ListProduct = (props: IProductProps) => {
     <>
       <Search />
       <div className={styles.productList}>
-        {searchResult?.map((product: IProduct) => (
+        {searchResult?.map((product: any) => (
           <div key={product?.id} className={styles.candleItem}>
-            {product?.bestsellers > 20 && (
+            {/* {product?.bestsellers > 20 && (
               <span className={styles.tagCandleItem}>BESTSELLER</span>
-            )}
+            )} */}
             <div className={styles.addToCartGroup}>
-              <img className={styles.img1} src={product?.image[0]} />
-              <img className={styles.img2} src={product?.image[2]} />
+              <img className={styles.img1} src={product?.Images[0].imgSrc} />
+              <img className={styles.img2} src={product?.Images[1].imgSrc} />
               <NavLink to={`/product/${product?.id}`}>
                 <button className={styles.btnAddToCart}>LEARN MORE</button>
               </NavLink>
             </div>
             <div className={styles.titleCandle}>
-              <p>SCENT FAMILY: {product?.type}</p>
+              <p>SCENT FAMILY: {product?.Category?.title}</p>
               <p>{product?.name}</p>
-              <p>{product?.price}</p>
+              <p>{product?.price} $</p>
               <p style={{ display: "flex", gap: "9px" }}>
                 <span style={{ display: "flex" }}>
                   <AiFillStar />

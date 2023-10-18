@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-
-
 interface ImageProps {
   src: string;
   alt: string;

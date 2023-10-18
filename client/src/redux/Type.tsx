@@ -1,16 +1,10 @@
 interface IProduct {
-    bestsellers: number;
-    id: string;
     name: string;
     price: number;
     description: string;
-    type: string;
-    image: string[];
+    categoryId: number;
     quantity: number;
-    totalReview: number;
-    feedback: string[];
-    totalRating: number;
-    status: boolean;
+   stock: number;
   }
   
   interface IUser {

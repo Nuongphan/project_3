@@ -1,32 +1,22 @@
-import { ChangeEvent, FormEvent, ReactEventHandler, useEffect, useState } from "react";
+import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import styles from "../../User.module.css";
 import axios from "axios";
-const Register =  () => {
+const Register = () => {
   const regex = /^[a-z0-9](\.?[a-z0-9]){5,}@g(oogle)?mail\.com$/i;
   const [error, setError] = useState<any>("");
-  const [selectedFile, setSelectedFile] = useState<File| null>(null); 
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [repeatpassword, setRepeatPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [data, setData] = useState([]);
-  useEffect(  () => {
-   const getData= async () => {
-    await axios.get("http://localhost:8000/user")
-    .then((response) => {
-        console.log("data", response.data);
-        setData(response.data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      })} 
-  }, []);
-  const handleAvatarChange = (event:ChangeEvent<HTMLInputElement>) => {
+  const [errorData, setErrorData] = useState("");
+  console.log("7654323456", errorData);
+
+  const handleAvatarChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setSelectedFile(event.target.files[0]);
     }
   };
-  const filterEmail = data?.map((item:any) => item?.email);
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const checkError = await handleValidate();
@@ -41,35 +31,39 @@ const Register =  () => {
         fullName: fullName,
         email: email,
         password: password,
-       avatar:  selectedFile,
-       repeatpassword: repeatpassword
+        avatar: selectedFile,
+        repeatpassword: repeatpassword
       }
-      console.log("user", user);
-      
-    await  axios.post("http://localhost:8000/user/register", user, {
-      headers: {
-        "Content-Type": "multipart/form-data",
+      await axios.post("http://localhost:8000/user/register", user, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        }
       }
-    }
-    )
-    .then(response => response)
-    .catch((err)=> console.log("error", err)
-    );
+      )
+        .then(response => {
+          console.log("response", response);
+        })
+        .catch((err) => {
+          setErrorData(err.response.data.msg)
+          console.log("error", err)
+        }
+        );
       setFullName(""),
-      setEmail(""),
-      setPassword(""),
-      setRepeatPassword("");
+        setEmail(""),
+        setPassword(""),
+        setRepeatPassword("");
       alert("success");
-      return ""
     }
   }
   function handleValidate() {
     const newError: any = {};
     if (!email.trim()) {
       newError.email = "Email is required";
-    } else if (filterEmail.find((item: string) => item === email)) {
+    }
+     else if (errorData) {
       newError.email = "Email already exists";
-    } else if (!regex.test(email)) {
+    } 
+    else if (!regex.test(email)) {
       newError.email = "Invalid email";
     }
     if (!password.trim()) {
@@ -86,7 +80,8 @@ const Register =  () => {
     if (!fullName.trim()) {
       newError.lastName = "Full Name is required";
     }
-    return newError}
+    return newError
+  }
   useEffect(() => {
     handleSubmit;
   }, [error]);
@@ -95,7 +90,7 @@ const Register =  () => {
       <form onSubmit={handleSubmit} className={styles.formRegister}>
         <h3>REGISTER</h3>
         <p>Please fill in the information below:</p>
-        <input
+        <div className={styles.inputRegister}><input
           onChange={(e) => setFullName(e.target.value)}
           value={fullName}
           name="fullName"
@@ -103,8 +98,8 @@ const Register =  () => {
           placeholder="full name"
           id="full-name"
         />
-        <p className={styles.renderError}>{error.fullName}</p>
-        <input
+          <p className={styles.renderError}>{error.fullName}</p></div>
+        <div className={styles.inputRegister}> <input
           onChange={(e) => setEmail(e.target.value)}
           value={email}
           name="email"
@@ -112,9 +107,8 @@ const Register =  () => {
           placeholder="Email"
           id="email"
         />
-        <p className={styles.renderError}>{error.email}</p>
-        <label className="error" id="error-email"></label>
-        <input
+          <p className={styles.renderError}>{error.email}</p></div>
+        <div className={styles.inputRegister}><input
           onChange={(e) => setPassword(e.target.value)}
           value={password}
           name="password"
@@ -122,18 +116,18 @@ const Register =  () => {
           placeholder="Password"
           id="password"
         />
-        <p className={styles.renderError}>{error.password}</p>
-
-        <input
-          onChange={(e) => setRepeatPassword(e.target.value)}
-          value={repeatpassword}
-          type="password"
-          placeholder="Repeat password"
-          id="repeat-password"
-        />
-        <p className={styles.renderError}>{error.repeatPassword}</p>
-        <input placeholder="Chọn ảnh đại diện" className={styles.upload}  type="file" onChange={handleAvatarChange} />
-        <input  type="submit" value="CREATE MY ACCOUNT" />
+          <p className={styles.renderError}>{error.password}</p></div>
+        <div className={styles.inputRegister}>
+          <input
+            onChange={(e) => setRepeatPassword(e.target.value)}
+            value={repeatpassword}
+            type="password"
+            placeholder="Repeat password"
+            id="repeat-password"
+          />
+          <p className={styles.renderError}>{error.repeatPassword}</p></div>
+        <input placeholder="Chọn ảnh đại diện" className={styles.upload} type="file" onChange={handleAvatarChange} />
+        <input type="submit" value="CREATE MY ACCOUNT" />
       </form>
     </div>
   );

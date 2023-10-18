@@ -3,8 +3,8 @@ import React from "react"
 const Footer = () => {
   return (
     <footer className={styles.footer}>
-      <div className="col-xl-3 col-md-6 col-sm-12">
-        <ul>
+      <div  className="col-xl-3 col-md-6 col-sm-12">
+        <ul className={styles.ulFooter}>
           <li>
             <h4 className={styles.footerContent}>Help</h4>
           </li>
@@ -14,7 +14,7 @@ const Footer = () => {
         </ul>
       </div>
       <div className="col-xl-3 col-md-6 col-sm-12">
-        <ul>
+        <ul className={styles.ulFooter}>
           <li>
             <h4 className={styles.footerContent}>Company</h4>
           </li>
@@ -24,7 +24,7 @@ const Footer = () => {
         </ul>
       </div>
       <div className="col-xl-3 col-md-6 col-sm-12">
-        <ul>
+        <ul className={styles.ulFooter}>
           <li>
             <h4 className={styles.footerContent}>Legal</h4>
           </li>
@@ -33,7 +33,7 @@ const Footer = () => {
         </ul>
       </div>
       <div className="col-xl-3 col-md-6 col-sm-12">
-        <ul>
+        <ul  className={styles.ulFooter}>
           <li>
             <h4 className={styles.footerContent}>Store Location</h4>
           </li>

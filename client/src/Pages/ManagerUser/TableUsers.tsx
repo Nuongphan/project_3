@@ -1,51 +1,23 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-
+import BaseAxios from "../../api/axiosClient";
 const TableUsers = () => {
-  const [userList, setUserList] = useState<
-    {
-      id: Number;
-      firstName: String;
-      lastName: String;
-      email: string;
-      member: string;
-      dob: string;
-      status: boolean;
-    }[]
-  >([]);
-
-  const handleGetDataa = () => {
-    axios
-      .get("http://localhost:8080/users")
-      .then((response) => setUserList(response.data));
+  const [userList, setUserList] = useState<any>([]);
+  const [isUpdated, setIsUpdated] = useState<any>(false)
+  const [searchInput, setSearchInput] = useState<any>("");
+  const handleGetDataa = async () => {
+    await BaseAxios.get("/user")
+      .then((response) => setUserList(response.data.result),)
+      .catch((error) => {
+        console.log(error);
+      })
   };
-  const [searchInput, setSearchInput] = useState("");
-
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setSearchInput(e.target.value);
-  }
-  const handleChangeStatus = (id: any) => {
-    const userToUpdate = userList.find((user) => user.id === id);
-    if (!userToUpdate) {
-      console.error("Không tìm thấy người dùng");
-      return;
-    }
-    userToUpdate.status = !userToUpdate.status;
-    const updatedUserList = userList.map((user) =>
-      user.id === id ? userToUpdate : user
-    );
-    setUserList(updatedUserList);
-    axios.patch(`http://localhost:8080/users/${id}`, {
-      status: !userToUpdate.status,
-    });
-    console.log("Updated user", userToUpdate);
-  };
-
+  useEffect(() => { handleGetDataa() }, [isUpdated])
   useEffect(() => {
-    const searchResult = userList.filter((item) => {
+    const searchResult = userList?.filter((item: any) => {
       return (
-        item.firstName.toLowerCase().includes(searchInput.toLowerCase()) ||
-        item.member.toLowerCase().includes(searchInput.toLowerCase())
+        item?.fullName?.toLowerCase().includes(searchInput?.toLowerCase()) ||
+        item?.member?.toLowerCase().includes(searchInput?.toLowerCase())
       );
     });
     if (searchInput.length === 0) {
@@ -54,6 +26,30 @@ const TableUsers = () => {
       setUserList(searchResult);
     }
   }, [searchInput]);
+  const handleChangeStatus = async (id: any) => {
+    await BaseAxios.put(`/user/changestatus/${id}`)
+      .then((response) => console.log(response))
+      .catch((err) => console.log(err))
+    setIsUpdated(!isUpdated)
+  };
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setSearchInput(e.target.value);
+  }
+  const getRank = (rank: any) => {
+    switch (rank) {
+      case 1:
+        return "New Member";
+      case 2:
+        return "Silver";
+      case 3:
+        return "Gold";
+      case 4:
+        return "Platinum";
+      default:
+        return "Unknown Rank";
+    }
+  };
+
   return (
     <>
       <div className="pb-4 bg-white dark:bg-gray-900 search ">
@@ -105,16 +101,13 @@ const TableUsers = () => {
                 Member
               </th>
               <th scope="col" className="px-4 py-3">
-                DOB
-              </th>
-              <th scope="col" className="px-4 py-3">
-                Action
+                Status
               </th>
               <th scope="col" className="px-4 py-3"></th>
             </tr>
           </thead>
           <tbody>
-            {userList.map((item, index) => (
+            {userList.length > 0 && userList.map((item: any, index: number) => (
               <tr
                 key={String(item.id)}
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
@@ -124,22 +117,15 @@ const TableUsers = () => {
                   scope="row"
                   className="px-4 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  {item.firstName} {item.lastName}
+                  {item.fullName}
                 </th>
                 <td className="px-4 py-4">{item.email}</td>
-                <td className="px-4 py-4">{item.member}</td>
-                <td className="px-4 py-4">{item.dob}</td>
+                <td className="px-4 py-4">{getRank(item.rank)}</td>
                 <td
                   style={{ display: "flex", gap: "5px" }}
                   className="px-4 py-5"
                 >
-                  <span
-                    style={{ marginTop: "5px" }}
-                    className={`${
-                      item.status ? "green" : "bg-red-500"
-                    } w-2 h-2 rounded inline-block mr-1 `}
-                  ></span>
-                  <span> {item.status ? "active" : "inactive"}</span>
+                  <span> {item.status === 1 ? "active" : "inactive"}</span>
                 </td>
                 <td className="px-4 py-4">
                   <button

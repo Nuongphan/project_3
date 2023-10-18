@@ -4,17 +4,20 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ProductItem from "./ProductItem";
 import { IProduct } from "../../redux/Type";
-// import Paginationn from "../../components/common/Pagination.tsx";
 import { useDispatch } from "react-redux";
 import { addProduct } from "../../redux/Action/ProductAction";
+import BaseAxios from "../../api/axiosClient";
 export default function ManagerProduct() {
   const dispatch = useDispatch();
-  const [productList, setProductList] = useState<IProduct[]>([]);
+  const [productList, setProductList] = useState<any[]>([]);
+  console.log(productList);
+  
   const [searchInput, setSearchInput] = useState("");
   const handleGetDataa = () => {
-    axios
-      .get("http://localhost:8080/proucts")
-      .then((response) => setProductList(response.data));
+    BaseAxios.get("/products").then((data) => {
+      setProductList(data.data.products);
+    }
+    ).then(err => console.log(err))
   };
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setSearchInput(e.target.value);
@@ -108,10 +111,10 @@ export default function ManagerProduct() {
                 Image
               </th>
               <th scope="col" className="px-3 py-3">
-                Quantity
+                Stock
               </th>
               <th scope="col" className="px-3 py-3">
-                Status
+                Type
               </th>
               <th scope="col" className="px-3 py-3">
                 Price
@@ -122,7 +125,7 @@ export default function ManagerProduct() {
             </tr>
           </thead>
           <tbody>
-            {productList.map((product) => (
+            {productList?.map((product) => (
               <ProductItem
                 key={product?.id}
                 product={product}

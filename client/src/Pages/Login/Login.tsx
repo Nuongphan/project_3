@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../../User.module.css";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import axios from "axios";
 const Login = () => {
   const navigate = useNavigate();
@@ -37,25 +37,23 @@ const Login = () => {
       <form onSubmit={handleLogin} action="" className={styles.formLogin}>
         <h1>LOG IN</h1>
         <p>Please enter your e-mail and password:</p>
-        <input
+        <div className={styles.inputLogin}><input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           type="email"
           placeholder="Email"
           id="email"
         />
-        <p className={styles.renderError}> {error.email}</p>
-        <label className="error" id="error-email-login"></label>
-        <input
-          className={styles.lastinput}
+          <p className={styles.renderError}> {error.email}</p></div>
+        <div className={styles.inputLogin}><input
+          className={styles.lastinputt}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           type="password"
           placeholder="Password"
           id="password"
-        /><Link to=""><span className={styles.forgotpassword}>Forgot Password</span></Link>
-        <p className={styles.renderError}> {error.password}</p>
-        <label className="error" id="error-password-login"></label>
+        /><Link to="/auth/forgotpassword"><span className={styles.forgotpassword}>Forgot Password</span></Link>
+          <p className={styles.renderError}> {error.password}</p></div>
         <input className={styles.btnLogin} type="submit" value="LOGIN" />
         <p>
           Don't have an account? <Link to="/auth/register">Create one</Link>

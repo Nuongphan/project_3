@@ -3,7 +3,9 @@ const imagesService= require("../services/images.service")
 class ImagesClass {
   // Tạo mới ảnh
   async addImages( req, res) {
+    console.log(req.files);
     const data = req?.files?.map((el) => ({ src: el.path, ...req.body }));
+    console.log("====", data);
     const result= await imagesService.addImages(data)
     return res.status(result.status).json(result)}
   // xoá ảnh

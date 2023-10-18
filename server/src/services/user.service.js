@@ -5,7 +5,7 @@ const userRepo = require("../repositories/user.repository")
 const Sequelize = require('sequelize');
 const sendPassword = require("../controllers/mailjet.controller")
 const Address = require("../models/users/address.model")
-const generateToken=require("../middleware/genaralToken")
+const generateToken = require("../middleware/genaralToken")
 class UserService {
     // đăng ký
     async register(data) {
@@ -15,14 +15,15 @@ class UserService {
             const role = roleRepo.roleUser.dataValues.id
             const roleId = roleinput ? roleinput : role
             const checkUser = await userRepo.register(email)
-            if (checkUser.email) {
+            console.log("98765432", checkUser.userr.email);
+            if (checkUser.userr.email == email) {
                 return { msg: 'email already existed', status: 409 }
             }
             if (password == repeatpassword) {
                 const salt = 10 //số lần lặp để mã hoá => thường là 10-12
                 const genSalt = await bcrypt.genSalt(salt)
                 const newPassword = await bcrypt.hash(password, genSalt)
-                const newUser=  await userRepo.regissterr({fullName, avatar, newPassword, email, repeatpassword, roleId})
+                const newUser = await userRepo.regissterr({ fullName, avatar, newPassword, email, repeatpassword, roleId })
                 return { msg: "Register successfully", status: 200, data: newUser }
             } else {
                 return { msg: 'Password does not match', status: 409 }
@@ -45,7 +46,7 @@ class UserService {
             const checkPass = await bcrypt.compare(password, checkUser.dataValues.password) // trả về giá trị true hoặc false 2 tham số (password gửi lên,password trong db)
             if (checkPass) {
                 const { password, ...data } = checkUser.dataValues
-                const jwtData= generateToken(checkUser)
+                const jwtData = generateToken(checkUser)
                 // const jwtData = jwt.sign(data, process.env.ACCESS_TOKEN_SCERET)
                 return ({ msg: "login successfully", accessToken: jwtData, data: data, status: 200 })
             } else {
@@ -86,6 +87,9 @@ class UserService {
     // forgot password
     async forgotPassword(data) {
         const { email, randomString } = data
+        if (!email) {
+            return { msg: "Email is required", status: 500 }
+        }
         try {
             const userForgotPassword = await userRepo.forgotPassword(email)
             if (userForgotPassword) {
@@ -109,6 +113,10 @@ class UserService {
     }
     async resetPassword(data) {
         const { email, codeReset, codeInput, password } = data
+console.log("77777777777777", data);
+        if (!password || !codeInput) {
+            return { msg: "Password or code is required", status: 500 }
+        }
         if (codeReset !== codeInput) {
             return { msg: "Invalid reset code", status: 400 }
         }
@@ -119,7 +127,7 @@ class UserService {
             }
             const saltRounds = 10; // Số lần lặp để mã hóa (thường là 10-12)
             const hashedPassword = await bcrypt.hash(password, saltRounds);
-            const newPassword= await userRepo.resetPassword({hashedPassword, email})
+            const newPassword = await userRepo.resetPassword({ hashedPassword, email })
             return { msg: "Password reset successfully", status: 200, data: newPassword }
         } catch (error) {
             return { msg: "Password reset failed", status: 500 }
@@ -142,10 +150,10 @@ class UserService {
     async createAddress(data) {
         const { address, phone, id } = data
         try {
-            const newAddress = await userRepo.createAddresss({address,phone,id})
+            const newAddress = await userRepo.createAddresss({ address, phone, id })
             return { msg: "created successfully", status: 200, data: newAddress }
         } catch (error) {
-            return { msg: "error", status: 400 } 
+            return { msg: "error", status: 400 }
         }
     }
     // delete address 
@@ -156,7 +164,7 @@ class UserService {
             return { msg: "user not found", status: 404 }
         }
         try {
-            const result= await userRepo.deleteeAddress(idAddress)
+            const result = await userRepo.deleteeAddress(idAddress)
             // await Address.destroy({ where: { id: idAddress } })
             return { msg: "deleted", status: 200, data: result }
         } catch (error) {
@@ -171,7 +179,7 @@ class UserService {
             return { msg: "user not found", status: 404 }
         }
         try {
-            const result= await userRepo.updateeAddress({ idAddress, address, phone })
+            const result = await userRepo.updateeAddress({ idAddress, address, phone })
             return { msg: "updated successfully", status: 200, data: result }
         } catch (error) {
             return { msg: "error updating address", status: 400 }

@@ -10,8 +10,9 @@ class ProductsController {
     }
     //Thêm mới sản phẩm
     async addProduct(req, res) {
-        const { name, price, description, categoryId } = req.body
-        const result = await productService.addProduct({ name, price, description, categoryId })
+        console.log(req.body, '==========================');
+        const { name, price, description, categoryId, stock } = req.body
+        const result = await productService.addProduct({ stock,name, price, description, categoryId })
         return res.status(result.status).json(result)
     }
     //DELETE SẢN PHẨM 

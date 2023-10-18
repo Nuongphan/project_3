@@ -14,7 +14,7 @@ const data: Data[] = [
   {
     title: "CARE + SAFETY",
     answer:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit.Asperiores aut commodi vel culpa pariatur nam nobis aspernatur aliquam iste, hic earum dolore, autem ullam? Esse nobis labore laudantium repellendus debitis?",
+      "Directions:Always trim wicks to 1/4 inch before lighting (we suggest using a wick trimmer). The first time you light your candle, let it burn for 3-4 hours to allow the melted wax to reach the edge of the container to prevent your candle from tunneling.Candle Safety:Follow the 2 foot rule - don't place a burning candle near clothing, books, curtains or anything flammable. Place candle holders on a stable, heat-resistant surface that is sturdy and large enough to catch any melted wax. Keep lit candles away from drafts, ceiling fans and any air currents. Never leave a burning candle unattended. Extinguish all candles when you leave a room or before going to sleep or if the flame gets too close to the candle holder or container. A candle should not be burned for more than four hours at a time. For a margin of safety, discontinue burning a candle when 1/4 inch of wax remains in the container.",
   },
 
   {

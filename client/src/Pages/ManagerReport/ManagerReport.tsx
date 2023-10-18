@@ -10,7 +10,7 @@ const time = new Date();
 export const formattedDate = time.toDateString();
 const ManagerReport = () => {
 
-  return (
+  return ( 
     <>
       <div className="containerr">
         <div
@@ -172,7 +172,7 @@ const ManagerReport = () => {
           <ChartBar />
         </section>
         <section>
-          <Bestseller />
+          {/* <Bestseller /> */}
         </section>
       </div>
     </>

@@ -9,7 +9,6 @@ import MoreInfor from "./MoreInfor";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { increaseCart } from "../../redux/Action/CartAction";
-
 const ProductDetail = () => {
   const [value, setvalue] = useState<any>(1);
   const dispatch = useDispatch();
@@ -17,28 +16,35 @@ const ProductDetail = () => {
   const [user, setUser] = useState<any>();
   const idUser = localStorage.getItem("auth");
   const navigate = useNavigate();
-  const [products, setProucts] = useState<IProduct[]>([]);
+  const [products, setProducts] = useState<any>();
   useEffect(() => {
     axios
-      .get("http://localhost:8080/proucts")
-      .then((res) => setProucts(res.data));
+      .get(`http://localhost:8000/products/${id}`)
+      .then((res) => {
+        setProducts(res.data.product)
+      })
+      .catch((err) => console.log(err))
+
   }, []);
   useEffect(() => {
     axios
       .get(`http://localhost:8080/users/${idUser}`)
       .then((res) => setUser(res.data));
   }, []);
-  const productDetail: any = products.find((product) => id == product.id);
-  const srcImg: string[] | undefined = productDetail?.image;
+  const srcImg: any  = products?.[0]?.Images?.map((img: any) => img.imgSrc)
+  
+console.log(srcImg);
+
+
   function handleAddToCart(id: any) {
-    if (value > Number(productDetail.quantity)) {
-      alert("Số lượng bạn mua đã đạt giới hạn của sản phẩm");
-      return;
-    }
-    if (productDetail.quantity == 0) {
-      alert("Sản phẩm đã hết hàng");
-      return;
-    }
+    // if (value > Number(productDetail.quantity)) {
+    //   alert("Số lượng bạn mua đã đạt giới hạn của sản phẩm");
+    //   return;
+    // }
+    // if (productDetail.quantity == 0) {
+    //   alert("Sản phẩm đã hết hàng");
+    //   return;
+    // }
     const userLoginJSON = localStorage.getItem("userLogin");
     const userLogin: IUser | null = userLoginJSON
       ? JSON.parse(userLoginJSON)
@@ -52,16 +58,16 @@ const ProductDetail = () => {
     //  Kiểm tra xem sản phẩm có trong Cart hay không
     const checkIndex: any = user?.cart.findIndex((item: any) => item.id === id);
 
-    if (checkIndex !== -1) {
-      console.log(typeof user.cart[checkIndex].quantity);
+    // if (checkIndex !== -1) {
+    //   console.log(typeof user.cart[checkIndex].quantity);
 
-      user.cart[checkIndex].quantity =
-        Number(user.cart[checkIndex].quantity) + Number(value);
-    } else {
-      const productCart = { ...productDetail };
-      productCart.quantity = value;
-      user.cart.push(productCart);
-    }
+    //   user.cart[checkIndex].quantity =
+    //     Number(user.cart[checkIndex].quantity) + Number(value);
+    // } else {
+    //   const productCart = { ...productDetail };
+    //   productCart.quantity = value;
+    //   user.cart.push(productCart);
+    // }
     axios.patch(`http://localhost:8080/users/${idUser}`, user);
     dispatch(increaseCart());
   }
@@ -73,21 +79,21 @@ const ProductDetail = () => {
             <ScrollSpy targetIds={srcImg} />
           </div>
           <div>
-            <div className={styles.sectionImg} id={productDetail?.image[0]}>
-              <img src={productDetail?.image[0]} alt="" />
+            <div className={styles.sectionImg} id={srcImg?.[0]}>
+              <img src={srcImg?.[0]} alt="" />
             </div>
-            <div className={styles.sectionImg} id={productDetail?.image[1]}>
-              <img src={productDetail?.image[1]} alt="" />
+            <div className={styles.sectionImg} id={srcImg?.[1]}>
+              <img src={srcImg?.[1]} alt="" />
             </div>
-            <div className={styles.sectionImg} id={productDetail?.image[2]}>
-              <img src={productDetail?.image[2]} alt="" />
+            <div className={styles.sectionImg} id={srcImg?.[2]}>
+              <img src={srcImg?.[2]} alt="" />
             </div>
           </div>
         </div>
         <div className="productContent">
           <div className={styles.productItemTitle}>
-            <p id="productName">{productDetail?.name}</p>
-            <p id="productPrice">{productDetail?.price.toFixed(0)}</p>
+            <p id="productName">{products?.[0]?.name}</p>
+            <p id="productPrice">{products?.[0]?.price?.toFixed(0)} $</p>
             <p style={{ display: "flex", gap: "9px" }}>
               <span style={{ display: "flex" }}>
                 <AiFillStar />
@@ -104,7 +110,7 @@ const ProductDetail = () => {
                   cursor: "pointer",
                 }}
               >
-                {productDetail?.totalReview} review
+                20 review
               </span>
             </p>
             <input
@@ -115,15 +121,15 @@ const ProductDetail = () => {
             />{" "}
             <p>Buy 3+ Minimalist Candles, Get 15% off plus Free Shipping*</p>
             <br />
-            <button onClick={() => handleAddToCart(productDetail?.id)}>
+            <button onClick={() => handleAddToCart(products?.[0]?.id)}>
               ADD TO CART
             </button>
           </div>
           <div className={styles.productItemContent}>
-            <p>
+            <p className={styles.tinyyy}>
               {React.createElement("div", {
-                dangerouslySetInnerHTML: {
-                  __html: productDetail?.description,
+              dangerouslySetInnerHTML: {
+                  __html:`<div className={styles.tinyyyy}}> ${products?.[0]?.description}</div>` 
                 },
               })}
             </p>

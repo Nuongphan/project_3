@@ -13,11 +13,11 @@ class ProductService {
     }
     //Thêm mới sản phẩm
     async addProduct(data) {
-        const { name, price, description, categoryId } = data
+        const { stock,name, price, description, categoryId} = data
         try {
-            const newProduct= await productRepo.adddProduct({ name, price, description, categoryId })
+            const newProduct= await productRepo.adddProduct({stock, name, price, description, categoryId })  
             return { msg: "Successfully created", status: 200, return : newProduct}
-        } catch (error) {
+        } catch (error) { console.log("555555555555", error);
             return { msg: "fail", status: 400 }
         }
     }

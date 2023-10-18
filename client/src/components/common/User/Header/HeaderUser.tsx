@@ -5,7 +5,7 @@ import { useState } from "react";
 import React from "react"
 import { BiSearch, BiShoppingBag, BiUser } from "react-icons/bi";
 import { HiOutlineLogout } from "react-icons/hi";
-// import { IUser } from "../../../../redux/Type";
+import { IUser } from "../../../../redux/Type";
 import { useSelector } from "react-redux";
 
 const HeaderUser = () => {
@@ -13,7 +13,7 @@ const HeaderUser = () => {
   const navigate = useNavigate();
   const idUser = localStorage.getItem("auth");
   const userLoginJSON = localStorage.getItem("userLogin");
-  const userLogin: any | null = userLoginJSON
+  const userLogin: IUser | null = userLoginJSON
     ? JSON.parse(userLoginJSON)
     : null;
   const [isCheck, setIsCheck] = useState(idUser);

@@ -2,9 +2,8 @@ const Images = require("../models/images/images.entity")
 const Products = require("../models/products/products.model")
 class ImagesRepo {
     async addImagess(data) {
-        console.log(data);
         let arrayImage = []
-        for (let i = 0; i < data.length; i++) {
+        for (let i = 0; i < data?.length; i++) {
             const result = await Images.create({
                 imgSrc: data[i].src,
                 productId: Number(data[i].productId),

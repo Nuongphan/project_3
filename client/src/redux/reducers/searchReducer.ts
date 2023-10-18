@@ -1,8 +1,8 @@
 import { IProduct } from "../Type";
 import React from "react"
-const initialState: IProduct[] = [];
+const initialState: any[] = [];
 export const SearchReducer = (
-  state: IProduct[] = initialState,
+  state: any[] = initialState,
   action: any
 ) => {
   switch (action.type) {

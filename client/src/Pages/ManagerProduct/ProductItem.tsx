@@ -4,29 +4,28 @@ import { IProduct } from "../../redux/Type";
 import { useDispatch } from "react-redux";
 import { editProduct } from "../../redux/Action/ProductAction";
 import { Link } from "react-router-dom";
+import BaseAxios from "../../api/axiosClient";
 import axios from "axios";
 interface IProductProps {
-  product: IProduct;
-  productList: IProduct[];
+  product: any;
+  productList: any[];
   setProductList: any;
 }
 const ProductItem: React.FC<IProductProps> = (props: IProductProps) => {
   const { product, productList, setProductList } = props;
   const dispatch = useDispatch();
-  function handleDelete(id: string) {
-    if (product.id === id) {
-      axios.delete(`http://localhost:8080/proucts/${id}`);
-    }
-    const updateData = productList?.filter((item) => item.id !== id);
-    setProductList([...updateData]);
+  function handleDelete(id: number) {
+  BaseAxios.delete(`/products/${id}`)
+  const updateData = productList?.filter((item) => item?.id !== id);
+  setProductList([...updateData]);
   }
   function handleEdit(id: string) {
-    if (product.id == id) {
+    if (product?.id == id) {
       dispatch(editProduct(product));
     }
   }
   console.log("product", productList);
-
+  console.log("=================", product);
   return (
     <>
       {" "}
@@ -35,15 +34,15 @@ const ProductItem: React.FC<IProductProps> = (props: IProductProps) => {
           scope="row"
           className="px-2 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
         >
-          {product?.id}
+          {product?.id}            
         </td>
-        <td className="px-2 py-3">{product?.name}</td>
+        <td className="px-2 py-3">{product?.name.toLowerCase()}</td>
         <td className="px-2 py-3">
-          <img className="img-product" src={product?.image[0]} alt="" />
+          {/* <img className="img-product" src={product?.image[0]} alt="" /> */}
         </td>
-        <td className="px-3 py-3">{product?.quantity}</td>
+        <td className="px-3 py-3">{product?.stock}</td>
         <td className="px-3 py-3">
-          {product?.status ? "Stocks" : "Out Stocks"}
+          {product?.Category.title}
         </td>
         <td className="px-3 py-3">{product?.price}</td>
         <td

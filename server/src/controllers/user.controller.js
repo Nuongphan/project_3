@@ -58,7 +58,10 @@ class UserController {
         const randomBytes = crypto.randomBytes(length);
         // Chuyển buffer thành chuỗi hex
         const randomString = randomBytes.toString("hex");
+        res.cookie('email',email, { httpOnly: true });
+        res.cookie('randomString',randomString, { httpOnly: true });0
         req.session.user = { email, randomString }
+        console.log("================",req.session.user);
         const result = await userService.forgotPassword({ email, randomString })
         return res.status(result.status).json(result)
     }
@@ -69,10 +72,16 @@ class UserController {
     }
     // reset password
     async resetPassword(req, res) {
+        const emailCookie = req.cookies.email;
+        const codeCookie = req.cookies.randomString;
+        console.log("(((((((((((", emailCookie, codeCookie);
+        console.log("req.session", req.session);
+        console.log("----------------", req?.session?.user);
         const email = req.session?.user?.email;
         const codeReset = req.session?.user?.randomString;
         const codeInput = req.body.code;
         const password = req.body.password;
+        console.log("4356788976543", codeReset, codeInput, password,email);
         const result = await userService.resetPassword({ email, codeReset, codeInput, password })
         return res.status(result.status).json(result)
     }

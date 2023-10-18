@@ -1,48 +1,53 @@
 import axios from "axios";
 import { IProduct } from "../Type";
-import React from "react"
+import BaseAxios from "../../api/axiosClient";
+import React, { useState } from "react"
 export interface IState {
-  productList: IProduct[];
-  productEdit: IProduct;
+  productList: any[];
+  productEdit: any;
   type: string;
+  responses: any
 }
 const initialState: IState = {
   productList: [],
   productEdit: {
-    id: "",
     name: "",
     quantity: 0,
     price: 0,
     description: "",
-    type: "",
-    image: ["", "", ""],
-    feedback: [],
-    totalReview: 0,
-    totalRating: 0,
-    status: true,
-    bestsellers: 0
+    categoryId: 0,
+    stock: 0,
   },
   type: "",
+  responses: ""
 };
 export const ProductReducer = (state: IState = initialState, action: any) => {
   const deleteProductAPI = async (id: string) => {
-    await axios.delete(`http://localhost:8080/proucts/${id}`);
+    await BaseAxios({ url: `/products/${id}`, method: "DELETE" }).then((response) => {
+      console.log(response);
+    }
+    ).catch(err => console.log(err))
+
   };
-  const addProductAPI = async (product: IProduct) => {
-    await axios.post("http://localhost:8080/proucts", product);
-  };
-  switch (action.type) {
-    case "DELETE_PRODUCT":{
+  // const addProductAPI = async (product: any) => {
+  //   await BaseAxios.post(`/products`, product)
+  //     .then((response)=>console.log(response.data.return.id,"<<<##"))
+  //     .catch((err) => console.log("555555555",err))
+  //   };
+  switch (action.type) {    
+    case "DELETE_PRODUCT": {
       deleteProductAPI(action.payload);
-      const updateProductsAPI = state.productList.filter(
-        (item) => item.id !== action.payload
-      );
+      // const updateProductsAPI = state.productList.filter(
+      //   (item) => item.id !== action.payload
+      // );
       return {
-        ...state,
-        productList: updateProductsAPI,
-      };}
+        ...state
+        // ,
+        // productList: updateProductsAPI,
+      };
+    }
     case "ADD_PRODUCT":
-      addProductAPI(action.payload);
+      // addProductAPI(action.payload);
       return {
         ...state,
         productList: [...state.productList, action.payload],

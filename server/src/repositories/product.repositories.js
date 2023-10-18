@@ -4,7 +4,6 @@ const Images = require("../models/images/images.entity")
 class ProductRepository {
     async getAllProducts() {
         const products = await Products.findAll({
-          
             include: [
                 { model: Images, attributes: ['imgSrc', 'productId'] },
                 { model: Categories, attributes: ['title', 'id'] }]
@@ -37,12 +36,13 @@ class ProductRepository {
         return result
     }
     async adddProduct(data) {
-        const { name, price, description, categoryId } = data
+        const {stock, name, price, description, categoryId } = data
         const newProduct = await Products.create({
             name: name,
             price: price,
             description: description,
             categoryId: categoryId,
+            stock: stock
         })
         return newProduct
     }

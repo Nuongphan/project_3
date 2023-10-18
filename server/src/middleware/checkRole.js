@@ -2,7 +2,7 @@ const checkRoleUser = (req, res, next) => {
     try {
         const roleNum = req.infor.roleId
         console.log("+++++",roleNum);
-        if (roleNum == 2) {
+        if (roleNum === 2) {
             next()
         } else if (!roleNum) {
             res.status(403).json("Forbidden")

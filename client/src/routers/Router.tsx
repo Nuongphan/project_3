@@ -15,6 +15,8 @@ import ManagerUsers from "../Pages/ManagerUser/ManagerUser";
 import { AddProduct } from "../Pages/ManagerProduct/AddProduct";
 import Shop from "../Pages/Shop/Shop";
 import AccountHome from "../Pages/Account/AccountHome";
+import ForgotPassword from "../Pages/Forgotpassword/Forgotpassword";
+import ResetPassword from "../Pages/ResetPassword/ResetPassword";
 
 const RootRouter = () => {
   return (
@@ -23,6 +25,8 @@ const RootRouter = () => {
         {/* //Auth */}
         <Route path="/auth" element={<Auth />}>
           <Route index element={<Login />} />
+          <Route path="forgotpassword" element={<ForgotPassword />} />
+          <Route path="resetpassword" element={< ResetPassword/>} />
           <Route path="register" element={<Register />} />
           <Route path="account" element={<AccountHome />} />
         </Route>
