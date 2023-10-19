@@ -1,6 +1,7 @@
 const Users = require("../models/users/users.model")
 const Products = require("../models/products/products.model")
 const Cart = require("../models/cart/cart.entity")
+const Images = require("../models/images/images.entity")
 class CartRepo {
     async productCartUser(data) {
         const { userId, productId } = data
@@ -31,7 +32,8 @@ class CartRepo {
         return product
     }
     async getCartByUser(userId) {
-        const cart = await Cart.findAll({ where: { userId: userId } })
+        const cart = await Cart.findAll({
+            include: [{model: Products, include:[{model:Images}]}], where: { userId: userId } })
         return cart
     }
     async deleteProduct(cartId) {
@@ -44,8 +46,8 @@ class CartRepo {
         return cart
     }
     async changQuantity(data) {
-        const { cartId, newQauntity } = data
-        const result = await Cart.update({ quantity: newQauntity }, { where: { id: cartId } })
+        const { cartId, quantity } = data
+        const result = await Cart.update({ quantity: quantity }, { where: { id: cartId } })
         return result
     }
 }

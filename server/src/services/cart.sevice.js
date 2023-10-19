@@ -48,8 +48,7 @@ class CartService {
         try {
             const cart= await cartRepo.findCart(data)
             if(!cart) {return {msg:"no cart found", status:404}}
-            const newQauntity=Number(cart?.dataValues?.quantity)+Number(quantity)
-            const result = await cartRepo.changQuantity({newQauntity,cartId})
+            const result = await cartRepo.changQuantity({quantity,cartId})
             return { msg: "success", data: result, status: 200 }
         } catch (error) {
             return { msg: "fail", data: error, status: 400 }

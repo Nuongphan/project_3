@@ -5,22 +5,17 @@ import { useState } from "react";
 import React from "react"
 import { BiSearch, BiShoppingBag, BiUser } from "react-icons/bi";
 import { HiOutlineLogout } from "react-icons/hi";
-import { IUser } from "../../../../redux/Type";
 import { useSelector } from "react-redux";
 
 const HeaderUser = () => {
   const cartCount = useSelector((state: any) => state.cart.count);
   const navigate = useNavigate();
-  const idUser = localStorage.getItem("auth");
-  const userLoginJSON = localStorage.getItem("userLogin");
-  const userLogin: IUser | null = userLoginJSON
+  const userLoginJSON = localStorage.getItem("username");
+  const userLogin:any = userLoginJSON
     ? JSON.parse(userLoginJSON)
     : null;
-  const [isCheck, setIsCheck] = useState(idUser);
   function handleLogout(): void {
-    localStorage.removeItem("auth");
-    localStorage.removeItem("userLogin");
-    setIsCheck(null);
+    localStorage.clear()
     navigate("/");
   }
 
@@ -44,7 +39,7 @@ const HeaderUser = () => {
             <span>Studio</span>
           </div>
           <div style={{ display: "flex", gap: "15px", fontSize: "17px" }}>
-            {isCheck === null ? (
+            {!userLogin ? (
               <>
                 <Link to="/auth">
                   <AiOutlineUser />
@@ -57,7 +52,7 @@ const HeaderUser = () => {
             ) : (
               <>
                 <span>
-                  {userLogin?.firstName} {userLogin?.lastName}
+                  {userLogin?.fullName}
                 </span>
                 <span style={{ paddingTop: "3px" }}>
                   <Link to="/auth/account">
