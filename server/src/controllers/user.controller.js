@@ -94,8 +94,8 @@ class UserController {
     //thêm thông tin địa chỉ user
     async createAddress(req, res) {
         const { id } = req.params
-        const { address, phone } = req.body
-        const result=await userService.createAddress({address, phone, id})
+        const {name, address, phone } = req.body
+        const result=await userService.createAddress({name, address, phone, id})
         return res.status(result.status).json(result)
     }
     // delete address 

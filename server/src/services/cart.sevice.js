@@ -5,6 +5,10 @@ class CartService {
         const { quantity, userId, productId } = data
         console.log(data);
         try {
+            const user=await cartRepo.findUser(data)
+            if(!user) {
+                return { msg: "User not found", status: 404 }
+            }
             const product = await cartRepo.findProduct(data)
             if (!product) { return { msg: "Product not found", status: 404 } }
             const productCartUser = await cartRepo.productCartUser(data)

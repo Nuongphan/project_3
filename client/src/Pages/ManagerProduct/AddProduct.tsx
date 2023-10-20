@@ -19,16 +19,18 @@ export function AddProduct() {
   const productEdit = useSelector((state: any) => state.products.editProduct);
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState<any>(0);
   const type = useSelector((state: any) => state.products.type);
   console.log("type", type);
+  console.log("productEdit", productEdit);
+  
 
   useEffect(() => {
     if (productEdit) {
       setName(productEdit.name || "");
-      setQuantity(productEdit.quantity || 0);
+      setQuantity(productEdit.stock || 0);
       setPrice(productEdit.price || 0);
-      setSelected(productEdit.type || 0);
+      setSelected(productEdit.Category.id || 0);
       setDescriptions(productEdit.description || "");
     }
     if (type === "Add") {
@@ -49,26 +51,26 @@ export function AddProduct() {
     }
     setImages(listImages)
   };
-
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (productEdit) {
+    if (productEdit && type=="Edit") {
       const updateProductt = {
-        ...productEdit,
         name: name,
         quantity: quantity,
         price: price,
         categoryId: selected,
         description: descriptions,
-        stock: true,
+        stock:quantity ,
       };
+      console.log("updateProductt", updateProductt);
       try {
-        await BaseAxios.post(`/products/${productEdit.id}`, updateProductt)
+       const updateProduct= await BaseAxios.put(`/products/${productEdit.id}`, updateProductt)
+       console.log("updated product", updateProduct);
         setName("");
         setQuantity(0);
         setDescriptions("");
         setPrice(0);
-        navigate(-1); // Quay lại trang trước đó
+        // navigate(-1); // Quay lại trang trước đó
       } catch (error) {
         console.error("Lỗi khi cập nhật sản phẩm:", error);
       }
@@ -199,9 +201,7 @@ export function AddProduct() {
               onChange={(e) => setSelected(Number(e.target.value))}
               name="images"
               id="type"
-
-              required
-            >
+              required>
               <option value="">-- Loại --</option>
               <option value="1">Candle</option>
               <option value="2">Room mist</option>
@@ -209,7 +209,7 @@ export function AddProduct() {
               <option value="4">Bath bar</option>
             </select>
           </div>
-          <div className="input-item">
+          <div  className="input-item">
             <label>Ảnh sản phẩm</label>
             <input
               type="file"
@@ -218,6 +218,8 @@ export function AddProduct() {
               required
             />
           </div>
+        
+       
           <div style={{ marginBottom: "20px" }} className="input-item">
             <label htmlFor="">Mô tả sản phẩm</label>
             <TinyMCEEditor

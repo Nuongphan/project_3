@@ -3,13 +3,14 @@
 * {
   box-sizing: border-box;
 }
+
 a {
   text-decoration: none;
   color: unset;
 }
 body {
   overflow-x: hidden;
-  font-family: 'Times New Roman', Times, serif;
+  font-family:'Times New Roman' !important
 }
 .logo {
   border-radius: 50%;
@@ -136,4 +137,7 @@ body {
   font-size: 1px;
   background-color: #000;
   margin: 0 0 2px 2px
+}
+input {
+  outline: none;
 }

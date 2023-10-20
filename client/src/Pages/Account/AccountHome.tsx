@@ -1,11 +1,11 @@
 import { useState } from "react";
 import styles from "../../User.module.css";
-import Account from "./Account";
+import Address from "./Address";
 import HistoryOrder from "./HistoryOrder";
 import React from "react"
 const AccountHome = () => {
-  const tab = ["Account", "History Order"];
-  const [type, setType] = useState<string>("Account");
+  const tab = ["Address", "History Order"];
+  const [type, setType] = useState<string>("Address");
 
   return (
       <div className={styles.mainAccount}>
@@ -27,7 +27,9 @@ const AccountHome = () => {
         </ul>
       </div>
       <div className= {styles.infor}>
-        {type == "Account" ? <Account /> : <HistoryOrder />}
+        {type == "Address" ? <Address /> : 
+        <HistoryOrder />
+        }
       </div>
     </div>
   );

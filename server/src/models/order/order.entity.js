@@ -9,7 +9,6 @@ const Order = sequelize.define("Order", {
         primaryKey: true,
         autoIncrement: true,
         allowNull: false,
-        unique: true
     },
     userId: {
         type: DataTypes.INTEGER,
@@ -45,8 +44,7 @@ const Order = sequelize.define("Order", {
 }, {
     timestamps: true
 })
-Order.hasMany(Carts,{ foreignKey: "userId" } )
-Carts.belongsTo(Order, { foreignKey: "userId"})
+
 Order.belongsTo(Address, { foreignKey: "addressId", onDelete: "CASCADE", onUpdate: "CASCADE" })
 Address.hasMany(Order, { foreignKey: "addressId" })
 Order.belongsTo(Payment, { foreignKey: "paymentId", onDelete: "CASCADE", onUpdate: "CASCADE" })

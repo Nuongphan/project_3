@@ -32,8 +32,8 @@ class ProductsController {
     async updateProduct(req, res) {
         const filePath = req.file
         const { id } = req.params
-        const { name, price, description, categoryId, } = req.body
-        const result = await productService.updateProduct({ filePath, name, price, description, categoryId, id })
+        const { stock,name, price, description, categoryId, } = req.body
+        const result = await productService.updateProduct({stock, filePath, name, price, description, categoryId, id })
         return res.status(result.status).json(result)
     }
 }

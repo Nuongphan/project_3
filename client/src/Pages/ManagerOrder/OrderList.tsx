@@ -1,39 +1,49 @@
 import { useEffect, useState } from "react";
-import { IOrder } from "../../redux/Type";
 import axios from "axios";
 import React from "react"
+import BaseAxios from "../../api/axiosClient";
 const OrderList = () => {
-  const [orderList, setOrderList] = useState<IOrder[]>([]);
+  const [orderList, setOrderList] = useState<any[]>([]);
   const [searchInput, setSearchInput] = useState("");
   const handleGetDataa = () => {
-    axios
-      .get("http://localhost:8080/orders")
-      .then((response) => setOrderList(response.data));
-  };
+   BaseAxios
+      .get("/orders")
+      .then((response) => { console.log(response.data.data);
+      setOrderList(response.data.data)})
+      .catch((error) =>console.log(error))};
   async function handleChangeStatus(
     e: React.ChangeEvent<HTMLSelectElement>,
-    id: string
+    id: any
   ) {
-    const changeStatus = e.target.value;
-    const updateOrderList = orderList.map((order: any) =>
-      order.id === id ? { ...order, status: changeStatus } : order
-    );
-    setOrderList(updateOrderList);
-    await axios.patch(`http://localhost:8080/orders/${id}`, {
-      status: changeStatus,
-    });
+    await BaseAxios.put(`/orders/${id}`, {status: e.target.value})
     alert("Order updated successfully");
   }
+  const getStaus = (status: any) => {
+    switch (status) {
+      case 1:
+        return "Pending";
+      case 2:
+        return " Processing";
+      case 3:
+        return "Shipping";
+      case 4:
+        return "Completed";
+        case 5:
+        return "Cancelled";
+      default:
+        return "Unknown Rank";
+    }
+  };
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     setSearchInput(e.target.value);
   }
   useEffect(() => {
-    const searchResult = orderList.filter((item) => {
+    const searchResult = orderList?.filter((item) => {
       return (
-        item.date.includes(searchInput) || item.status.includes(searchInput)
+        item?.orderDate?.includes(searchInput) || item?.status?.includes(searchInput)
       );
     });
-    if (searchInput.length === 0) {
+    if (searchInput?.length === 0) {
       handleGetDataa();
     } else {
       setOrderList(searchResult);
@@ -86,9 +96,6 @@ const OrderList = () => {
               <th scope="col" className="px-3 py-3">
                 Order Id
               </th>
-              <th scope="col" className="px-2 py-3">
-                User Id
-              </th>
               <th scope="col" className="px-3 py-3">
                 Date
               </th>
@@ -115,11 +122,10 @@ const OrderList = () => {
                 >
                   {index + 1}
                 </th>
-                <td className="px-3 py-4">{order.id}</td>
-                <td className="px-2 py-4">{order.idUser}</td>
-                <td className="px-3 py-4">{order.date}</td>
+                <td className="px-3 py-4">{order?.id}</td>
+                <td className="px-3 py-4">{order?.orderDate}</td>
                 <td className="px-3 py-4">
-                  {Number(order.totalPrice.toFixed(0)).toLocaleString()} VND
+                  {order?.totalAmount} VND
                 </td>
                 <td className="px-3 py-4">
                   <select
@@ -131,19 +137,18 @@ const OrderList = () => {
                       fontSize: "13px",
                     }}
                     onChange={(e) => handleChangeStatus(e, order?.id)}
-                    name="type"
-                    id="type"
+                    name="status"
+                    id="status"
                     required
-                    disabled={order.status === "Order Canceled"}
+                    disabled={order?.status === 5}
                   >
-                    <option value="">{order.status}</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Confirmed">Confirmed</option>
-                    <option value="In Transit">In Transit</option>
-                    <option value="Successfully Delivered">
+                    <option value="">{getStaus(order?.status)}</option>
+                    <option value="1">Pending</option>
+                    <option value="2">Confirmed</option>
+                    <option value="3">In Transit</option>
+                    <option value="4">
                       Successfully Delivered
                     </option>
-                    <option value="Order Canceled">Order Canceled</option>
                   </select>
                 </td>
                 <td className="px-3 py-4">

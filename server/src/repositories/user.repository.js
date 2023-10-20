@@ -12,12 +12,14 @@ class UserRepository {
         return user
     }
     async register(email) {
+        console.log("66666666", email);
         const roleUser = await Role.findOne({ where: { role: 1 } })
         const userr = await User.findOne({ where: { email: email } })
         return { roleUser, userr }
     }
     async regissterr(data) {
         const { fullName, avatar, newPassword, email, roleId } = data
+        console.log("65432", email);
         const newUser = await User.create({ avatar: avatar, fullName: fullName, password: newPassword, email: email, roleId: roleId })
         return newUser
     }
@@ -64,8 +66,9 @@ class UserRepository {
         return newPassword
     }
     async createAddresss(data) {
-        const { address, phone, id } = data
-        const newAddress = await Address.create({ address: address, phone: phone, userId: id })
+        const {name, address, phone, id } = data
+        console.log(data);
+        const newAddress = await Address.create({name: name,  address: address, phone: phone, userId: id })
         return newAddress
     }
     async deleteeAddress(id) {

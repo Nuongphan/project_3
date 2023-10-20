@@ -3,6 +3,7 @@ const Cart = require("../models/cart/cart.entity")
 const Address = require("../models/users/address.model")
 const Payment = require("../models/payment/payment.entity")
 const Products = require("../models/products/products.model")
+const OrderItem = require("../models/orderItem/orderItem.entity")
 class OrderRepo {
     async totalAmountInOrder(data) {
         const { userId } = data
@@ -22,6 +23,14 @@ class OrderRepo {
         return totalAmount
 
     }
+    async quantityCart(data) {
+        const { userId } = data
+        const result = await Cart.findAll({
+            where: { userId: userId }
+        })
+        console.log("9999999999999", result);
+
+    }
     async findCartByUser(data) {
         const { userId } = data
         const cart = await Cart.findAll({ where: { userId: userId } })
@@ -32,20 +41,49 @@ class OrderRepo {
         const address = await Address.findOne({ where: { id: addressId, userId: userId } })
         return address
     }
-    async findPayment(data) {
-        const { paymentId } = data
-        const payment = await Payment.findOne({ where: { id: paymentId } })
-        return payment
+    async findOrderByUser(userId) {
+        const order = await Order.findAll({ where: { userId: userId } })
+        return order
     }
     async createOrder(data) {
-        const { userId, addressId, paymentId } = data.data
+        const { userId, addressId } = data.data
         const { totalAmount } = data
+        const productsInCart = await Cart.findAll({
+            where: { userId: userId },
+        })
+        for (let i = 0; i < productsInCart.length; i++) {
+            const productInCart = productsInCart[i];
+            const productId = productInCart.dataValues.productId;
+            const quantityInCart = productInCart.dataValues.stock;
+            console.log("quantityInCart: " , quantityInCart);
+            // Kiểm tra số lượng sản phẩm trong kho
+            const productInStock = await Products.findByPk(productId);
+            console.log("productInStock: ", productInStock);
+            if (!productInStock || productInStock.stock < quantityInCart) {
+                return ({ msg: 'Sản phẩm không đủ trong kho' });
+            }
+            // Giảm số lượng sản phẩm trong kho
+            await Products.update(
+                { quantity: productInStock.quantity - quantityInCart },
+                { where: { id: productId } });
+        }
         const order = await Order.create({
             totalAmount: totalAmount,
             addressId: addressId,
-            paymentId: paymentId,
+            paymentId: 1,
             userId: userId,
         })
+        for (let i = 0; i < productsInCart?.length; i++) {
+            const createOrderItem = await OrderItem.create({
+                cartId: productsInCart[i].dataValues.id,
+                orderId: order.dataValues.id,
+                productId: productsInCart[i].dataValues.productId,
+                quantity: productsInCart[i].dataValues.quantity
+            });
+        }
+        Cart.destroy({
+            where: { userId: userId },
+        });
         return order
     }
     async updateOrderStatus(data) {

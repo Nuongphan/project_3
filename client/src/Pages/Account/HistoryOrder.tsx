@@ -2,13 +2,14 @@ import { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
 import styles from "../../User.module.css";
-// import { IOrder } from "../../redux/Type";
+import BaseAxios from "../../api/axiosClient";
 const HistoryOrder = () => {
   const [orderList, setOrderList] = useState<any>();
   useEffect(() => {
-    axios
-      .get("http://localhost:8080/orders")
-      .then((res) => setOrderList(res.data));
+    BaseAxios
+      .get("/orders/orderuser")
+      .then((res) => {setOrderList( res.data.data);
+     });
   }, []);
   useEffect(() => {}, [orderList]);
   const updateOrderStatus = (idOrder: string) => {
@@ -20,15 +21,29 @@ const HistoryOrder = () => {
     });
     setOrderList(updatedOrders);
   };
+  const getStaus = (status: any) => {
+    switch (status) {
+      case 1:
+        return "Pending";
+      case 2:
+        return " Processing";
+      case 3:
+        return "Shipping";
+      case 4:
+        return "Completed";
+        case 5:
+        return "Cancelled";
+      default:
+        return "Cancelled";
+    }
+  };
   async function handleCancel(idOrder: string) {
     const userConfirmed = window.confirm(
       "Bạn có chắc chắn muốn hủy đơn hàng này?"
     );
     if (userConfirmed) {
       try {
-        await axios.patch(`http://localhost:8080/orders/${idOrder}`, {
-          status: "Order Canceled",
-        });
+        await BaseAxios.put(`orders/cancel/${idOrder}`);
         // Cập nhật trạng thái đơn hàng trong state
         updateOrderStatus(idOrder);
       } catch (error) {
@@ -39,7 +54,7 @@ const HistoryOrder = () => {
   // Hàm kiểm tra xem nút "Cancel" có thể được nhấp hay không
   const canCancel = (idOrder: string) => {
     const order = orderList.find((order: any) => order.id === idOrder);
-    return order.status == "Pending";
+    return order.status == 1;
   };
   return (
     <div className={styles.orderTable}>
@@ -75,22 +90,23 @@ const HistoryOrder = () => {
               >
                 {item?.id}
               </td>
-              <td className="px-5 py-3">{item?.date}</td>
+              <td className="px-5 py-3">{item?.orderDate}</td>
               <td className="px-5 py-3">
-                {Number(item?.totalPrice.toFixed(0)).toLocaleString()}
+                {Number(item?.totalAmount?.toFixed(0)).toLocaleString()}
               </td>
-              <td className="px-5 py-3">{item?.status}</td>
+              <td className="px-5 py-3">  {getStaus(item?.status)}</td>
               <td className="px-5 py-3">
                 <button
                   onClick={() => handleCancel(item?.id)}
                   className={styles.buttonOrderTable}
-                  disabled={!canCancel(item.id)}
+                  disabled={!canCancel(item?.id)}
+                  style={{backgroundColor: item?.status==5 ? "red": ""}}
                 >
-                  Cancel
+                Cancel
                 </button>
               </td>
               <td className="px-5 py-3">
-                <button className={styles.buttonOrderTable1}>Detail</button>
+                <button  className={styles.buttonOrderTable1}>Detail</button>
               </td>
             </tr>
           ))}

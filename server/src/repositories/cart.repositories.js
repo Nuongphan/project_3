@@ -31,6 +31,12 @@ class CartRepo {
         const product = await Products.findOne({ where: { id: productId } })
         return product
     }
+    async findUser(data) {
+        const { userId } = data
+        const user = await Users.findOne({ where: { id: userId } })
+        return user
+
+    }
     async getCartByUser(userId) {
         const cart = await Cart.findAll({
             include: [{model: Products, include:[{model:Images}]}], where: { userId: userId } })

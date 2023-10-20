@@ -45,9 +45,9 @@ const HeaderUser = () => {
                   <AiOutlineUser />
                 </Link>
 
-                <Link to="/cart">
+                {/* <Link to="/cart">
                   <BiShoppingBag />
-                </Link>
+                </Link> */}
               </>
             ) : (
               <>

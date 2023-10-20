@@ -1,14 +1,10 @@
-import { IProduct } from "../Type";
-import React from "react"
-const initialState: any[] = [];
-export const SearchReducer = (
-  state: any[] = initialState,
-  action: any
-) => {
-  switch (action.type) {
-    case "ADD":
-      state = [...action.payload];
-      return state;
-  }
-  return state;
-};
+const initialState :string = ""
+
+export const searchReducer= (state: string = initialState, action: any) => {
+    switch (action.type) {
+        case "SEARCH":
+          return state = action.payload
+        default:
+          return state;
+      }
+}

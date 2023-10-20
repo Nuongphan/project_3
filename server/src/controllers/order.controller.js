@@ -4,8 +4,7 @@ class OrderController {
     async createOrder(req, res) {
         const userId=req.infor.id;
         const addressId=req.body.addressId;
-        const paymentId=req.body.paymentId;
-        const result = await orderService.createOrder({userId,addressId,paymentId})
+        const result = await orderService.createOrder({userId,addressId})
         return res.status(result.status).json(result)
     }
     //cập nhật status cho order có 5 trạng thái:
@@ -30,6 +29,12 @@ class OrderController {
     async cancelOrder(req, res) {
         const orderId=req.params.idOrder;
         const result = await orderService.cancelOrder(orderId)
+        return res.status(result.status).json(result)
+    }
+    // get order by user
+    async findOrderByUser(req, res) {
+        const userId=req.infor.id;
+        const result = await orderService.findOrderByUser(userId)
         return res.status(result.status).json(result)
     }
     

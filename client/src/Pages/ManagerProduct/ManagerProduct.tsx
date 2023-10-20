@@ -10,8 +10,6 @@ import BaseAxios from "../../api/axiosClient";
 export default function ManagerProduct() {
   const dispatch = useDispatch();
   const [productList, setProductList] = useState<any[]>([]);
-  console.log(productList);
-  
   const [searchInput, setSearchInput] = useState("");
   const handleGetDataa = () => {
     BaseAxios.get("/products").then((data) => {

@@ -5,110 +5,68 @@ import { decreaseCart } from "../../redux/Action/CartAction";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import BaseAxios from "../../api/axiosClient";
-import { log } from "console";
 const CartTable = () => {
   const [productList, setProductList] = useState<any>();
   const navigate = useNavigate();
   const cartCount = useSelector((state: any) => state.cart.count);
   const dispatch = useDispatch();
-  const [orderList, setOrderList] = useState<any | undefined>();
-  useEffect(() => {}, [cartCount]);
+ const [address, setAddress]=useState<any>()
+ const [idAddress, setIdAddress]=useState<any>(0)
+  // useEffect(() => { }, [cartCount]);
   useEffect(() => {
     BaseAxios
       .get(`/cart`)
-      .then((res) =>{setProductList(res.data.data), console.log("66666666",res.data.data);
-      })}, []);
-
- // Total quantity
-  const  totalQuantity = productList?.reduce(
+      .then((res) => {
+        setProductList(res.data.data), console.log("66666666", res.data.data);
+      })
+  }, []);
+  useEffect(()=>{
+    BaseAxios
+    .get(`/user/${ productList?.[0]?.userId}/address`)
+    .then((res)=>{
+      setAddress(res?.data?.data?.inforUser?.[0]?.Addresses[0])
+     setIdAddress(res?.data?.data?.inforUser?.[0]?.Addresses?.[0]?.id);
+      })
+  },[productList])
+  // Total quantity
+  const totalQuantity = productList?.reduce(
     (total: number, item: { quantity: number }) => {
       return total + item.quantity;
     },
     0
   );
-
   const handleChangQuantity = async (id: number, quantity: any) => {
-    console.log("++++++++", id, quantity);
-   await BaseAxios.put(`/cart/${id}`,{ quantity:quantity})
-   // tạo một bản sao của productList để rerender lại 
-   const updatedProductList = productList?.map((item: any) =>
-   item?.id === id ? { ...item, quantity: quantity } : item
- );
- setProductList(updatedProductList); 
+    await BaseAxios.put(`/cart/${id}`, { quantity: quantity })
+    // tạo một bản sao của productList để rerender lại 
+    const updatedProductList = productList?.map((item: any) =>
+      item?.id === id ? { ...item, quantity: quantity } : item
+    );
+    setProductList(updatedProductList);
   };
   // Total
-  // let shipping: string = "";
-  // let totalResult: number = 0;
-  // if (totalQuantity >= 3) {
-  //   totalResult = userr?.cart?.reduce(
-  //     (total: number, item: { quantity: number; price: number }) => {
-  //       return Number(total + item.quantity * item.price) * 0.85;
-  //     },
-  //     0
-  //   );
-  //   shipping = "0";
-  // } else {
-  //   totalResult = userr?.cart?.reduce(
-  //     (total: number, item: { quantity: number; price: number }) => {
-  //       return Number(total + item.quantity * item.price) * 0.85;
-  //     },
-  //     0
-  //   );
-  //   shipping = Number(25000).toLocaleString();
-  // }
+  let totalResult: number = 0;
+  totalResult = productList?.reduce(
+    (total: number, item: any) => {
+      return Number(total + item.quantity * item.Product.price)
+    }, 0)
+
 
   // Paymet
   const handleCheckOut = async () => {
-  //   if (cartCount == 0) {
-  //     alert("Vui lòng thêm sản phẩm vào giỏ hàng.");
-  //     navigate("/shop");
-  //   }
-  //   if (cartCount > 0) {
-  //     productList?.map((itemA: any) => {
-  //       const productPayment = userr?.cart?.find(
-  //         (itemB: any) => itemA.id == itemB.id
-  //       );
-  //       if (productPayment) {
-  //         const updateQuantity = itemA.quantity - productPayment.quantity;
-  //         itemA.bestsellers += productPayment.quantity;
-  //         const updateProduct = {
-  //           ...itemA,
-  //           quantity: updateQuantity,
-  //           bestsellers: itemA.bestsellers,
-  //         };
-  //         axios.patch(
-  //           `http://localhost:8080/proucts/${updateProduct.id}`,
-  //           updateProduct
-  //         );
-  //       }
-  //       return itemA;
-  //     });
-  //   }
-  //   const id = "ORDER_" + Math.floor(Math.random() * 100);
-  //   const order:any = {
-  //     id: id,
-  //     idUser: userr?.id,
-  //     status: "Pending",
-  //     address: userr?.address,
-  //     phoneNumber: userr?.phone,
-  //     paymentMethod: "Code",
-  //     detail: userr?.cart,
-  //     date: new Date().toLocaleDateString(),
-  //     totalPrice: totalResult,
-  //     totalQuantity: totalQuantity,
-  //     shipping: shipping,
-  //   };
-  //   axios.post("http://localhost:8080/orders", order);
-  //   setUserr((pre: any) => ({ ...pre, cart: [] }));
-  //   axios.patch(`http://localhost:8080/users/${idUser}`, userr);
-  //   navigate("/");
-  // };
-
-  // if (userr?.cart?.length == 0) {
-  //   dispatch(decreaseCart());
-   }
+    if (productList?.length==0) {
+      alert("Vui lòng thêm sản phẩm vào giỏ hàng.");
+      navigate("/shop");
+    }
+     await BaseAxios.post("/orders", {addressId:idAddress})
+     .then(res=>console.log(res))
+     .catch(err=>console.log(err))
+      navigate("/");
+    };
+  if (productList?.length == 0) {
+    dispatch(decreaseCart())
+  }
   // Xoá sản phẩm trong cart
-   async function handleDelete(id: any) {
+  async function handleDelete(id: any) {
     const newCart = productList?.filter((item: any) => item.id !== id);
     await BaseAxios.delete(`/cart/${id}`)
     setProductList(newCart);
@@ -163,12 +121,11 @@ const CartTable = () => {
                   >
                     {Number(item?.quantity * item?.Product?.price).toLocaleString()} VND
                   </span>
-                  <span 
-                  style={{ color: "red", marginRight: "10px" }}>
+                  <span
+                    style={{ color: "red", marginLeft: "10px" }}>
                     {totalQuantity >= 3
-                      ? `${
-                          Number(item?.quantity) * Number(item?.Product?.price) * 0.85
-                        } VND`
+                      ? `${Number(item?.quantity) * Number(item?.Product?.price) * 0.85
+                      } VND`
                       : ""}
                   </span>
                 </td>
@@ -177,18 +134,25 @@ const CartTable = () => {
           })}
         </tbody>
       </table>
-      {/* <div className={styles.discount}>
+      <div className={styles.discount}>
         <div className={styles.discountItem1}>
-          <p>Add Order Note or Gift Note:</p>
+          {/* <p>Add Order Note or Gift Note:</p>
           <textarea
             name="discount"
             id="discount"
             placeholder="Leave a gift note here"
-          ></textarea>
+          ></textarea> */}
+          <p>Address:</p>
+          <p>{address?.address}</p>
+          <p>Phone:</p>
+          <p>{address?.phone}</p>
+          <Link to={"/auth/account"}><button className={styles.buttonEditAdress}>EDIT</button></Link>
         </div>
         <div className={styles.discountItem2}>
+          <p><span>PAYMENT METHOD: Cash on delivery</span></p>
+        {  productList?.length>0 && <p><span style={{ marginRight: "38px" }}>SHIPPING FEE:</span> 25.000</p>}
           <p>
-            <span style={{ marginRight: "5px" }}>TOTAL:</span>
+            <span style={{ marginRight: "90px" }}>TOTAL:</span>
             {Number(totalQuantity) >= 3
               ? Number(totalResult * 0.85).toLocaleString()
               : Number(totalResult)?.toLocaleString()}{" "}
@@ -196,7 +160,7 @@ const CartTable = () => {
           </p>
           <button onClick={handleCheckOut}>CHECKOUT</button>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };

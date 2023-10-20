@@ -2,27 +2,7 @@ const { DataTypes } = require("sequelize")
 const sequelize = require("../../config/dbConfig")
 const Orders = require("../order/order.entity")
 const Products = require("../products/products.model")
-// const OrderItem = sequelize.define("OrderItem", {
-//     id: {
-//         type: DataTypes.INTEGER,
-//         primaryKey: true,
-//         autoIncrement: true,
-//         allowNull: false,
-//         unique: true
-//     },
-//     orderId: {
-//         type: DataTypes.INTEGER,
-//         allowNull: false,
-//     },
-//     productId: {
-//         type: DataTypes.INTEGER,
-//         allowNull: false
-//     }
-// }, {
-//     timestamps: true
-// })
-// OrderItem.belongsTo(Orders, { foreignKey: "orderId", onDelete: "CASCADE", onUpdate: "CASCADE" })
-// Orders.hasOne(OrderItem, { foreignKey: "orderId" })
+const Carts=require("../../models/cart/cart.entity")
 const OrderItemm = sequelize.define(
     "OrderItemm",
     {
@@ -30,10 +10,6 @@ const OrderItemm = sequelize.define(
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true,
-            allowNull: false,
-        },
-        orderId: {
-            type: DataTypes.INTEGER,
             allowNull: false,
         },
         productId: {
@@ -44,18 +20,18 @@ const OrderItemm = sequelize.define(
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        price: {
-            type: DataTypes.INTEGER,
-            allowNull: false
-        },
-        productName: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
-        productThumbnail: {
-            type: DataTypes.STRING,
-            allowNull: false
-        }
+        // price: {
+        //     type: DataTypes.INTEGER,
+        //     allowNull: false
+        // },
+        // productName: {
+        //     type: DataTypes.STRING,
+        //     allowNull: false
+        // },
+        // productThumbnail: {
+        //     type: DataTypes.STRING,
+        //     allowNull: false
+        // }
     },
     {
         timestamps: false,
@@ -63,6 +39,8 @@ const OrderItemm = sequelize.define(
 );
 OrderItemm.belongsTo(Orders, { foreignKey: "orderId", onDelete: "CASCADE", onUpdate: "CASCADE" })
 Orders.hasMany(OrderItemm, { foreignKey: "orderId" })
-OrderItemm.belongsTo(Products, { foreignKey: "productId", onDelete: "CASCADE", onUpdate: "CASCADE" })
-Products.hasMany(OrderItemm, { foreignKey: "productId" })
+OrderItemm.belongsTo(Carts, { foreignKey: "cartId", onDelete: "CASCADE", onUpdate: "CASCADE" })
+Carts.hasMany(OrderItemm, { foreignKey: "cartId" })
+Products.hasMany(OrderItemm, { foreignKey: "productId", onDelete: "CASCADE", onUpdate: "CASCADE"})
+OrderItemm.belongsTo(Products, { foreignKey: "productId"})
 module.exports = OrderItemm

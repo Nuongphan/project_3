@@ -29,11 +29,7 @@ export const ProductReducer = (state: IState = initialState, action: any) => {
     ).catch(err => console.log(err))
 
   };
-  // const addProductAPI = async (product: any) => {
-  //   await BaseAxios.post(`/products`, product)
-  //     .then((response)=>console.log(response.data.return.id,"<<<##"))
-  //     .catch((err) => console.log("555555555",err))
-  //   };
+
   switch (action.type) {    
     case "DELETE_PRODUCT": {
       deleteProductAPI(action.payload);

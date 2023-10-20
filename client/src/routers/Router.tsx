@@ -17,6 +17,7 @@ import Shop from "../Pages/Shop/Shop";
 import AccountHome from "../Pages/Account/AccountHome";
 import ForgotPassword from "../Pages/Forgotpassword/Forgotpassword";
 import ResetPassword from "../Pages/ResetPassword/ResetPassword";
+import Order from "../Pages/Order/Order";
 
 const RootRouter = () => {
   return (
@@ -35,6 +36,7 @@ const RootRouter = () => {
           <Route index element={<Home />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="cart" element={<Cart />} />
+          <Route path="order" element={<Order />} />
           <Route path="product/:id" element={<ProductDetail />} />
         </Route>
         {/* //ADMIN */}

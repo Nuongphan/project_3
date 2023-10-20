@@ -43,13 +43,14 @@ class ProductService {
     }
     // update sản phẩm 
     async updateProduct(data) {
-        const {  name, price, description, categoryId, id } = data
+        const {stock,  name, price, description, categoryId, id } = data
+        console.log(data);
         const product = await productRepo.updateProduct(id)
         if (!product) {
             return { msg: "product not found", status: 404 }
         }
         try {
-            const result= await updateeProduct({ name, price, description, categoryId, id })
+            const result= await productRepo.updateeProduct({stock, name, price, description, categoryId, id })
             return { msg: "Successfully updated", status: 200, data: result }
         } catch (error) {
             console.log(error);

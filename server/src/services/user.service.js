@@ -15,8 +15,8 @@ class UserService {
             const role = roleRepo.roleUser.dataValues.id
             const roleId = roleinput ? roleinput : role
             const checkUser = await userRepo.register(email)
-            console.log("98765432", checkUser.userr.email);
-            if (checkUser.userr.email == email) {
+            console.log(checkUser);
+            if (checkUser.userr) {
                 return { msg: 'email already existed', status: 409 }
             }
             if (password == repeatpassword) {
@@ -30,6 +30,7 @@ class UserService {
             }
         }
         catch (error) {
+            console.log("er", error);
             return { msg: 'Error', status: 400 }
         }
     }
@@ -113,7 +114,6 @@ class UserService {
     }
     async resetPassword(data) {
         const { email, codeReset, codeInput, password } = data
-console.log("77777777777777", data);
         if (!password || !codeInput) {
             return { msg: "Password or code is required", status: 500 }
         }
@@ -148,9 +148,9 @@ console.log("77777777777777", data);
     }
     //thêm thông tin địa chỉ user
     async createAddress(data) {
-        const { address, phone, id } = data
+        const { address, phone, id , name} = data
         try {
-            const newAddress = await userRepo.createAddresss({ address, phone, id })
+            const newAddress = await userRepo.createAddresss({name, address, phone, id })
             return { msg: "created successfully", status: 200, data: newAddress }
         } catch (error) {
             return { msg: "error", status: 400 }

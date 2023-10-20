@@ -5,21 +5,11 @@ const OrderItems = require("../models/orderItem/orderItem.entity")
 class OrderItemRepo {
     async findProduct(data) {
         const { userId } = data
-        console.log("76543212", userId);
         const result = await Orders.findAll({
-            where: { userId: userId },
-            include: [{
-              model: Carts,
-            }]
-          });
-        // const result = await Carts.findAll({
-        //     where: {userId: userId},
-        //     include: [{
-        //         model: Orders
-        //     }]
-        // });
-        console.log("00000000000000000000", result);
-        return result
+        where: { userId: userId }});
+          const result2 = await Carts.findAll({
+            where: { userId: userId } });    
+        return {orders:result,carts:result2}
     }
 }
 module.exports = new OrderItemRepo()

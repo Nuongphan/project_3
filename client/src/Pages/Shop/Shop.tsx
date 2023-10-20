@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { IProduct } from "../../redux/Type";
 import axios from "axios";
 import ListProduct from "./ListProduct";
-import {  useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
-const Shop =  () => {
+const Shop = () => {
   const tab = [
     "Shop All",
     "Bestsellers",
@@ -17,39 +17,43 @@ const Shop =  () => {
     "Gift Sets",
   ];
   const searchResult = useSelector((state: any) => state.search);
-  console.log("searchResult", searchResult);
   const [type, setType] = useState<string>("Shop All");
-  const [productList, setProductList] = useState<any[]>([]);
-  useEffect( () => {
+  const [productList, setProductList] = useState<any>([]);
+  const dispatch = useDispatch()
+  useEffect(() => {
     axios
       .get("http://localhost:8000/products")
-      .then((response) => {console.log("55555555555", response.data.products);
-       setProductList(response.data.products)});
+      .then((response) => {
+        console.log("55555555555", response.data.products);
+        setProductList(response.data.products)
+      });
   }, []);
-  const filteredProducts = productList?.filter((product: any) => {
+
+  useEffect(() => {
     if (type === "Shop All") {
-      return product;
+      dispatch({ type: "CHANGE", payload: "Shop All" })
     }
     if (type === "Bestsellers") {
-      return product.bestsellers > 20;
+      dispatch({ type: "CHANGE", payload: "Bestsellers" })
+      // return product.bestsellers > 20;
     }
     if (type === "Candles") {
-      return product.type === type;
+      dispatch({ type: "CHANGE", payload: "Candles" })
     }
     if (type === "Diffusers") {
-      return product.type === "Diffusers";
+      dispatch({ type: "CHANGE", payload: "Diffusers" })
+  
     }
     if (type === "Room Mist") {
-      return product.type === "Room Mist";
+      dispatch({ type: "CHANGE", payload: "Room Mist" })
     }
     if (type === "Bath Bars") {
-      return product.type === "Bath bars";
+      dispatch({ type: "CHANGE", payload: "Bath Bars" })
     }
     if (type === "Gift Sets") {
-      return product.type === "Gift sets";
+      dispatch({ type: "CHANGE", payload: "Diffusers" })
     }
-  });
-    
+  }, [type])
   return (
     <div className={styles.conatinerShop}>
       <div>
@@ -78,7 +82,7 @@ const Shop =  () => {
           </ul>
         </div>
         <div className={styles.productAndSearch}>
-          <ListProduct productListt={filteredProducts} />
+          <ListProduct productListt={productList} />
         </div>
       </div>
     </div>

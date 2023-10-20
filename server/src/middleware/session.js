@@ -13,7 +13,7 @@ app.use(session({
     },
   }));
   const sessionUser =(req, res, next)=> {
-    const { email } = req.body
+    const { email } = req.body  
     const length = 10;
     // Sử dụng crypto.randomBytes để tạo buffer ngẫu nhiên
     const randomBytes = crypto.randomBytes(length);

@@ -3,7 +3,7 @@
 * {
   box-sizing: border-box;
   padding: 0;
-  font-family: Georgia, "Times New Roman", Times, serif;
+  /* font-family: Georgia, "Times New Roman", Times, serif; */
   margin: 0;
 }
 .headerUser {
@@ -699,7 +699,7 @@ button:hover {
   margin-top: 30px;
   display: flex;
   justify-content: space-between;
-  padding-right: 130px;
+  padding-right: 290px;
 }
 
 .discountItem1 p {
@@ -907,4 +907,16 @@ button:hover {
   color: black;
   border: 1px solid black;
   transition: all 0.5s linear;
+}
+.inputSearchProduct {
+  outline: none !important;
+}
+.buttonEditAdress {
+  font-size: 14px;
+  letter-spacing: 2px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  height: 29px;
+  width: 100px;
 }

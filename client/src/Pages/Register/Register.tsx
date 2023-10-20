@@ -1,6 +1,7 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import styles from "../../User.module.css";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const Register = () => {
   const regex = /^[a-z0-9](\.?[a-z0-9]){5,}@g(oogle)?mail\.com$/i;
   const [error, setError] = useState<any>("");
@@ -10,8 +11,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorData, setErrorData] = useState("");
-  console.log("7654323456", errorData);
-
+const navigate=useNavigate()
   const handleAvatarChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
       setSelectedFile(event.target.files[0]);
@@ -52,7 +52,7 @@ const Register = () => {
         setEmail(""),
         setPassword(""),
         setRepeatPassword("");
-      alert("success");
+      navigate("/auth")
     }
   }
   function handleValidate() {
@@ -63,9 +63,9 @@ const Register = () => {
      else if (errorData) {
       newError.email = "Email already exists";
     } 
-    else if (!regex.test(email)) {
-      newError.email = "Invalid email";
-    }
+    // else if (!regex.test(email)) {
+    //   newError.email = "Invalid email";
+    // }
     if (!password.trim()) {
       newError.password = "Password is required";
     } else if (password.trim().length < 8) {
@@ -126,7 +126,7 @@ const Register = () => {
             id="repeat-password"
           />
           <p className={styles.renderError}>{error.repeatPassword}</p></div>
-        <input placeholder="Chọn ảnh đại diện" className={styles.upload} type="file" onChange={handleAvatarChange} />
+        <input style={{display:"none"}} placeholder="Chọn ảnh đại diện" className={styles.upload} type="file" onChange={handleAvatarChange} />
         <input type="submit" value="CREATE MY ACCOUNT" />
       </form>
     </div>

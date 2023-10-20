@@ -24,8 +24,8 @@ const ProductItem: React.FC<IProductProps> = (props: IProductProps) => {
       dispatch(editProduct(product));
     }
   }
-  console.log("product", productList);
-  console.log("=================", product);
+  console.log("product", product);
+  
   return (
     <>
       {" "}
@@ -38,7 +38,7 @@ const ProductItem: React.FC<IProductProps> = (props: IProductProps) => {
         </td>
         <td className="px-2 py-3">{product?.name.toLowerCase()}</td>
         <td className="px-2 py-3">
-          {/* <img className="img-product" src={product?.image[0]} alt="" /> */}
+           <img className="img-product" src={product?.Images?.[0]?.imgSrc} alt="" /> 
         </td>
         <td className="px-3 py-3">{product?.stock}</td>
         <td className="px-3 py-3">

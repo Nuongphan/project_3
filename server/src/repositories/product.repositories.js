@@ -47,12 +47,13 @@ class ProductRepository {
         return newProduct
     }
     async updateeProduct(data) {
-        const { name, price, description, categoryId, id } = data
+        const { stock,name, price, description, categoryId, id } = data
         const product = await Products.update({
             name: name,
             price: price,
             description: description,
             categoryId: categoryId,
+            stock: stock
         }, { where: { id: id } })
         return product
     }
